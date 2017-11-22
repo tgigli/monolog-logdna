@@ -45,9 +45,9 @@ class LogdnaHandler extends \Monolog\Handler\AbstractProcessingHandler {
     private $curl_handle;
 
     /**
-     * @var bool $curl_handle_reuse
+     * @var bool $close_curl_handle_after_done
      */
-    private $curl_handle_reuse;
+    private $close_curl_handle_after_done;
 
     /**
      * @param string $value
@@ -89,7 +89,7 @@ class LogdnaHandler extends \Monolog\Handler\AbstractProcessingHandler {
         $headers = ['Content-Type: application/json'];
         $data = $record["formatted"];
 
-        $url = \sprintf("https://logs.logdna.com/logs/ingest?hostname=%s&mac=%s&ip=%s&now=%s", $this->hostname, $this->mac, $this->ip, $record['datetime']->getTimestamp());
+        $url = \sprintf("https://logs.logdna.com/logs/ingest?hostname=%s&mac=%s&ip=%s&now=%s", $this->hostname, $this->mac, $this->ip, $date->getTimestamp());
 
         \curl_setopt($this->curl_handle, CURLOPT_URL, $url);
         \curl_setopt($this->curl_handle, CURLOPT_USERPWD, "$this->ingestion_key:");
@@ -99,7 +99,7 @@ class LogdnaHandler extends \Monolog\Handler\AbstractProcessingHandler {
         \curl_setopt($this->curl_handle, CURLOPT_HTTPHEADER, $headers);
         \curl_setopt($this->curl_handle, CURLOPT_RETURNTRANSFER, true);
 
-        \Monolog\Handler\Curl\Util::execute($this->curl_handle, 5, $this->curl_handle_reuse);
+        \Monolog\Handler\Curl\Util::execute($this->curl_handle, 5, $this->close_curl_handle_after_done);
     }
 
     /**
@@ -112,7 +112,7 @@ class LogdnaHandler extends \Monolog\Handler\AbstractProcessingHandler {
     /**
      * @param bool $reuse
      */
-    protected function setReuseHandler($reuse) {
-        $this->curl_handle_reuse = $reuse;
+    public function setReuseHandler($reuse) {
+        $this->close_curl_handle_after_done = ($reuse === true)?false:true;
     }
 }
