@@ -45,6 +45,11 @@ class LogdnaHandler extends \Monolog\Handler\AbstractProcessingHandler {
     private $curl_handle;
 
     /**
+     * @var bool $curl_handle_reuse
+     */
+    private $curl_handle_reuse;
+
+    /**
      * @param string $value
      */
     public function setIP($value) {
@@ -94,7 +99,7 @@ class LogdnaHandler extends \Monolog\Handler\AbstractProcessingHandler {
         \curl_setopt($this->curl_handle, CURLOPT_HTTPHEADER, $headers);
         \curl_setopt($this->curl_handle, CURLOPT_RETURNTRANSFER, true);
 
-        \Monolog\Handler\Curl\Util::execute($this->curl_handle);
+        \Monolog\Handler\Curl\Util::execute($this->curl_handle, 5, $this->curl_handle_reuse);
     }
 
     /**
@@ -102,5 +107,12 @@ class LogdnaHandler extends \Monolog\Handler\AbstractProcessingHandler {
      */
     protected function getDefaultFormatter() {
         return new \Zwijn\Monolog\Formatter\LogdnaFormatter();
+    }
+
+    /**
+     * @param bool $reuse
+     */
+    protected function setReuseHandler($reuse) {
+        $this->curl_handle_reuse = $reuse;
     }
 }
