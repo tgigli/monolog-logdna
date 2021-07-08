@@ -1,6 +1,6 @@
 # [LogDNA](https://logdna.com/) handler for [Monolog](https://github.com/Seldaek/monolog)
 
-Monolog backend for logdna. This backend use logdna [ingestion api](https://docs.logdna.com/docs/api).
+Monolog backend for logdna. This backend use logdna [ingestion api](https://docs.logdna.com/v1.0/reference#api).
 
 ## Install
 
@@ -52,6 +52,10 @@ You should see the log 'mylog' with debug level in the logdna account for which 
 ## License
 
 This project is licensed under LGPL3.0. See `LICENSE` file for details.
+
+## Versions
+
+Version 1.x is php5 compatible version while 2.x is php7.
 
 ## Test
 
